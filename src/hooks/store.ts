@@ -5,6 +5,7 @@ interface FileStore {
   files: FileNode[];
   setFiles: (files: FileNode[]) => void;
   selectedFiles: string[];
+  reset: () => void;
 }
 
 const getSelected = (files: FileNode[]): string[] => {
@@ -27,4 +28,7 @@ export const useFileStore = create<FileStore>((set) => ({
     set({ files, selectedFiles: getSelected(files) });
   },
   selectedFiles: [],
+  reset: () => {
+    set({ files: [], selectedFiles: [] });
+  },
 }));

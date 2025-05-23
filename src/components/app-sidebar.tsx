@@ -27,7 +27,7 @@ export function AppSidebar() {
   const [selectedProject, setSelectedProject] = useState<string>("");
   const [projects, setProjects] = useState<Project[]>([]);
 
-  const { setFiles: setFileStore } = useFileStore();
+  const { setFiles: setFileStore, reset } = useFileStore();
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -124,19 +124,24 @@ export function AppSidebar() {
 
     setFiles((prevFiles) => {
       return updateNode(prevFiles, checked);
-    }); 
+    });
     setFileStore(updateNode(files, checked));
   };
 
+  const handleChangeProject = (id: string) => {
+    setSelectedProject(id);
+    reset();
+  };
+
   return (
-    <Sidebar className="">
+    <Sidebar>
       <SidebarContent>
         <SidebarHeader>
           <div className="flex flex-col gap-4">
             <div className="flex items-center gap-2">
               <Select
                 value={selectedProject}
-                onValueChange={setSelectedProject}
+                onValueChange={handleChangeProject}
               >
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Select a project" />
@@ -161,15 +166,16 @@ export function AppSidebar() {
           </div>
         </SidebarHeader>
         <div className="mx-2 mb-10">
-          {files && files.map((file) => (
-            <FileTreeNode
-              key={file.path}
-              node={file}
-              level={0}
-              // onToggle={handleToggle}
-              onSelect={handleSelect}
-            />
-          ))}
+          {files &&
+            files.map((file) => (
+              <FileTreeNode
+                key={file.path}
+                node={file}
+                level={0}
+                // onToggle={handleToggle}
+                onSelect={handleSelect}
+              />
+            ))}
         </div>
       </SidebarContent>
       <SidebarRail />
