@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { invoke } from "@tauri-apps/api/core";
 import { info } from "@tauri-apps/plugin-log";
-import { open } from "@tauri-apps/plugin-shell";
 import { Settings2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import "./App.css";
