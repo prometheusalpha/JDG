@@ -8,8 +8,7 @@
     "opener:default",
     "dialog:default",
     "log:default",
-    "clipboard-manager:allow-write-html",
-    "clipboard-manager:default",
+    "clipboard-manager:allow-write-image",
     "shell:default"
   ]
 }

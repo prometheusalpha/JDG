@@ -1,5 +1,6 @@
-use crate::java_parser::ClassInfo;
 use serde::{Deserialize, Serialize};
+
+use crate::types::{ClassInfo, ClassType};
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ClassDiagram {
@@ -57,18 +58,19 @@ pub fn generate_diagram(classes: Vec<ClassInfo>, vertical: bool) -> String {
 pub fn to_mermaid(diagram: &ClassDiagram, vertical: bool) -> String {
     let mut mermaid = String::from("classDiagram\n");
     if vertical {
-        mermaid.push_str("    direction LR\n");
+        mermaid.push_str("direction LR\n");
     }
 
     // Add classes with their members
     for class in &diagram.classes {
         // Class declaration
-        let kind = match class.is_interface {
-            true => "<<interface>>",
-            false => "",
+        let kind = match class.class_type {
+            ClassType::Interface => "    <<interface>>\n",
+            ClassType::Enum => "    <<enumeration>>\n",
+            _ => "",
         };
         mermaid.push_str(&format!("class {} {{\n", class.name));
-        mermaid.push_str(&format!("    {}\n", kind)); // Class head
+        mermaid.push_str(&format!("{}", kind)); // Class head
 
         // Fields
         for field in &class.fields {
@@ -79,7 +81,7 @@ pub fn to_mermaid(diagram: &ClassDiagram, vertical: bool) -> String {
                 _ => "",
             };
             mermaid.push_str(&format!(
-                "        {} {}: {}\n",
+                "    {} {}: {}\n",
                 field_visibility, field.name, field.type_name
             ));
         }
@@ -94,7 +96,7 @@ pub fn to_mermaid(diagram: &ClassDiagram, vertical: bool) -> String {
                 .join(", ");
 
             mermaid.push_str(&format!(
-                "        {} {}: {}({})\n",
+                "    {} {}: {}({})\n",
                 match method.visibility.as_str() {
                     "public" => "+",
                     "private" => "-",
@@ -107,7 +109,7 @@ pub fn to_mermaid(diagram: &ClassDiagram, vertical: bool) -> String {
             ));
         }
 
-        mermaid.push_str("    }\n");
+        mermaid.push_str("}\n");
     }
 
     // Add relationships
@@ -121,7 +123,7 @@ pub fn to_mermaid(diagram: &ClassDiagram, vertical: bool) -> String {
             _ => "--",
         };
 
-        mermaid.push_str(&format!("    {} {} {}\n", rel.from, arrow, rel.to));
+        mermaid.push_str(&format!("{} {} {}\n", rel.from, arrow, rel.to));
     }
 
     mermaid
