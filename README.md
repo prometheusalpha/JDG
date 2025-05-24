@@ -29,7 +29,7 @@ A cross-platform app to generate diagrams from Java source code, built with Type
 5. Copy the diagram markdown code to your clipboard. (Copy / Export image feature coming soon)
 
 ## Future ideas
-- [ ] Add copy / export image feature.
+- [x] Add copy / export image feature.
 - [x] Add support for file search.
 - [x] Add support for pan and zoom.
 - [ ] Add support for Java enum / record
