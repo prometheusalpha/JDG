@@ -58,7 +58,7 @@ export function FileTreeNode({
     <div className="select-none">
       <div
         className="flex items-center gap-2 py-1 hover:bg-accent/50 rounded-lg cursor-pointer"
-        style={{ paddingLeft: `${level * 8}px` }}
+        style={{ paddingLeft: `${level * 7 + 4}px` }}
         onClick={handleToggle}
       >
         {displayNode.type === "folder" && (

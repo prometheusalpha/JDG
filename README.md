@@ -1,5 +1,7 @@
 # JDG - Java Diagram Generator
 
+![alt text](public/screenshot1.png)
+
 A cross-platform app to generate diagrams from Java source code, built with TypeScript, Rust, and Tauri.
 
 ## Features
@@ -25,6 +27,18 @@ A cross-platform app to generate diagrams from Java source code, built with Type
 3. Select the classes you want to include in the diagram.
 4. Preview the diagram in the app.
 5. Copy the diagram markdown code to your clipboard. (Copy / Export image feature coming soon)
+
+## Future ideas
+- [ ] Add copy / export image feature.
+- [x] Add support for file search.
+- [x] Add support for pan and zoom.
+- [ ] Add support for Java enum / record
+- [ ] Add support for more Java features (e.g., annotations, generics).
+- [ ] Add support for more Java frameworks (e.g., Spring, Hibernate).
+- [ ] Add support for remote Java projects (e.g., GitHub, GitLab).
+- [ ] Add support for more diagram customization options (e.g., colors, styles).
+- [ ] Add support for more types of diagrams (e.g., sequence).
+- [ ] Add support for diagrams saving and management.
 
 ## Development
 ### Prerequisites

@@ -17,7 +17,6 @@ const getSelected = (files: FileNode[]): string[] => {
     if (file.children) {
       selected.push(...getSelected(file.children));
     }
-    console.log(file.name);
   }
   return selected;
 };

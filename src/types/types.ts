@@ -4,7 +4,7 @@ export interface Project {
   id: number;
   name: string;
   path: string;
-  lastOpened: number;
+  last_opened: number;
 }
 
 export const sampleStructure: FileNode = {
@@ -86,3 +86,13 @@ export const sampleStructure: FileNode = {
     },
   ],
 };
+
+export interface State {
+  // view mermaid-js/mermaid-live-editor/src/lib/util/serde.ts on github
+  // the actual mermaid code
+  code: string;
+  // mermaid config
+  mermaid: string;
+  updateDiagram: boolean;
+  rough: boolean;
+}

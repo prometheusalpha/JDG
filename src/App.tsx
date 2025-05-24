@@ -1,10 +1,15 @@
 import { Button } from "@/components/ui/button";
+import { PanzoomObject } from "@panzoom/panzoom";
 import { invoke } from "@tauri-apps/api/core";
+import { writeImage } from "@tauri-apps/plugin-clipboard-manager";
 import { info } from "@tauri-apps/plugin-log";
-import { Settings2 } from "lucide-react";
+import { Buffer } from "buffer";
+import { toPng } from "html-to-image";
+import { ScanIcon, Settings2, ZoomIn, ZoomOut } from "lucide-react";
 import { useEffect, useState } from "react";
 import "./App.css";
 import { CopyButton } from "./components/copy-button";
+import { DebounceButton } from "./components/debounced-button";
 import Mermaid from "./components/mermaid";
 import { ModeToggle } from "./components/mode-toggle";
 import {
@@ -18,12 +23,12 @@ import { Switch } from "./components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./components/ui/tabs";
 import { useFileStore } from "./hooks/store";
 import Layout from "./layout";
-// import pako from "pako";
 
 function App() {
   const { selectedFiles } = useFileStore();
   const [mermaid, setMermaid] = useState("");
   const [vertical, setVertical] = useState(false);
+  const [control, setControl] = useState<PanzoomObject | null>(null);
 
   useEffect(() => {
     // info("Generating mermaid class diagram");
@@ -44,10 +49,47 @@ function App() {
       });
   }, [selectedFiles, vertical]);
 
-  // const handleCopyPng = async () => {
-  //   const data = btoa(mermaid);
-  //   await open("https://mermaid.live/edit#base64:" + data);
-  // };
+  const handleExportImage = async () => {
+    // const state: State = {
+    //   code: mermaid,
+    //   mermaid: formatJSON({
+    //     theme: "default",
+    //   }),
+    //   updateDiagram: true,
+    //   rough: false,
+    // };
+    // const json = JSON.stringify(state);
+    // const data = new TextEncoder().encode(json);
+    // const compressed = pako.deflate(data, { level: 9 });
+    // const encoded = fromUint8Array(compressed, true);
+    // await open("https://mermaid.ink/img/pako:" + encoded);
+    const dataUrl = await toPng(
+      document.getElementById("randomId") as HTMLDivElement
+    );
+    const img = new Image();
+    img.src = dataUrl;
+    const res = await fetch(dataUrl);
+    const blob = await res.blob();
+    const reader = new FileReader();
+    reader.readAsArrayBuffer(blob);
+    reader.onloadend = async () => {
+      const buffer = Buffer.from(reader.result as ArrayBuffer);
+      await writeImage(buffer.buffer);
+      // console.log("Copied to clipboard");
+    };
+  };
+
+  const resetZoom = () => {
+    control?.reset();
+  };
+
+  const zoomIn = () => {
+    control?.zoomIn();
+  };
+
+  const zoomOut = () => {
+    control?.zoomOut();
+  };
 
   return (
     <Layout>
@@ -55,10 +97,6 @@ function App() {
         <div className="flex-1 flex flex-col">
           <div className="flex items-center justify-between p-4">
             <div className="flex gap-2">
-              {/* <Button variant="outline" size="sm">
-                <Download className="h-4 w-4 mr-2" />
-                Export
-              </Button> */}
               <Dialog>
                 <DialogTrigger asChild>
                   <Button variant="outline" size="sm">
@@ -82,30 +120,59 @@ function App() {
           </div>
           <div className="flex-1 p-4">
             {mermaid ? (
-              <Tabs defaultValue="diagram" className="">
+              <Tabs defaultValue="diagram" className="h-full pb-10">
                 <TabsList className="w-full">
                   <TabsTrigger value="diagram">Diagram</TabsTrigger>
                   <TabsTrigger value="source">Source</TabsTrigger>
                 </TabsList>
                 <TabsContent value="diagram">
-                  {/* <img
-                    src={`https://mermaid.ink/img/${btoa(mermaid)}`}
-                    alt="Mermaid Diagram"
-                  /> */}
-                  <div className="flex items-center py-2 gap-4">
-                    <div className="flex items-center">
-                      <Switch
-                        checked={vertical}
-                        onCheckedChange={setVertical}
+                  <div className="flex justify-between items-center">
+                    <div className="flex items-center py-2 gap-4">
+                      <div className="flex items-center">
+                        <Switch
+                          checked={vertical}
+                          onCheckedChange={setVertical}
+                        />
+                        <label className="ml-2">Rotate</label>
+                      </div>
+                      <DebounceButton
+                        func={handleExportImage}
+                        title="Copy PNG"
                       />
-                      <label className="ml-2">Vertical</label>
                     </div>
-                    {/* <Button variant="outline" size="sm" onClick={handleCopyPng}>
-                      Copy PNG
-                    </Button> */}
+                    <div className="border bg-popover rounded-lg p-1">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={resetZoom}
+                        disabled={!control}
+                      >
+                        <ScanIcon />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={zoomIn}
+                        disabled={!control}
+                      >
+                        <ZoomIn />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={zoomOut}
+                        disabled={!control}
+                      >
+                        <ZoomOut />
+                      </Button>
+                    </div>
                   </div>
-                  <div className="border rounded overflow-hidden bg-neutral-100">
-                    <Mermaid chart={mermaid} id={"mermaid"} />
+                  <div className="border rounded overflow-hidden bg-neutral-100 h-full">
+                    <Mermaid
+                      chart={mermaid}
+                      id={"randomId"}
+                      onChange={setControl}
+                    />
                   </div>
                 </TabsContent>
                 <TabsContent value="source">
