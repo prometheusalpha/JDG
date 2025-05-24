@@ -13,15 +13,14 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar";
 import { useFileStore } from "@/hooks/store";
+import { search } from "@/lib/search";
 import { Project } from "@/types/types";
 import { invoke } from "@tauri-apps/api/core";
 import { open } from "@tauri-apps/plugin-dialog";
-import { info } from "@tauri-apps/plugin-log";
 import { Plus, XIcon } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { FileNode, FileTreeNode } from "./file-tree";
 import { Input } from "./ui/input";
-import { search } from "@/lib/search";
 
 export function AppSidebar() {
   const [files, setFiles] = useState<FileNode[]>([]);
