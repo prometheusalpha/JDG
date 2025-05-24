@@ -88,21 +88,14 @@ pub fn read_structure_from_path(path: &str) -> Option<FileNode> {
     return Some(root);
 }
 
+#[allow(deprecated)]
 pub fn ensure_config_exists() -> String {
-    let os = std::env::consts::OS;
-    let mut home_dir = std::env::var("HOME").unwrap();
-    if os == "windows" {
-        home_dir = std::env::var("USERPROFILE").unwrap();
-    } else if os == "macos" {
-        home_dir = std::env::var("HOME").unwrap();
-    } else if os == "linux" {
-        home_dir = std::env::var("HOME").unwrap();
-    }
+    let home_dir = std::env::home_dir().unwrap().to_str().unwrap().to_string();
     // create folder if it doesn't exist
     let mut folder_path = home_dir.clone();
     folder_path.push_str("/Documents/jdg");
     if !std::path::Path::new(&folder_path).exists() {
-        std::fs::create_dir(&folder_path).unwrap();
+        std::fs::create_dir_all(&folder_path).unwrap();
     }
     // create json file
     let mut json_path = folder_path.clone();
