@@ -3,6 +3,7 @@ use tree_sitter::{Parser, Query, QueryCursor};
 pub mod class_parser;
 pub mod enum_parser;
 pub mod interface_parser;
+pub mod record_parser;
 
 fn extract_package(
     source_code: &str,
@@ -17,7 +18,7 @@ fn extract_package(
         "
     (package_declaration
         (scoped_identifier) @package)
-",
+        ",
     )?;
 
     let mut query_cursor = QueryCursor::new();

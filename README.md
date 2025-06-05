@@ -32,12 +32,11 @@ A cross-platform app to generate diagrams from Java source code, built with Type
 - [x] Add copy / export image feature.
 - [x] Add support for file search.
 - [x] Add support for pan and zoom.
-- [ ] Add support for Java enum / record
-- [ ] Add support for more Java features (e.g., annotations, generics).
-- [ ] Add support for more Java frameworks (e.g., Spring, Hibernate).
-- [ ] Add support for remote Java projects (e.g., GitHub, GitLab).
+- [x] Add support for Java enum / record
 - [ ] Add support for more diagram customization options (e.g., colors, styles).
+- [ ] Add support for remote Java projects (e.g., GitHub, GitLab).
 - [ ] Add support for more types of diagrams (e.g., sequence).
+- [ ] Add support for more Java frameworks (e.g., Spring).
 - [ ] Add support for diagrams saving and management.
 
 ## Development

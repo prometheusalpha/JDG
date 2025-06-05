@@ -76,11 +76,14 @@ export function AppSidebar() {
       if (!selected) {
         return;
       }
+
+      const newPath = selected.replace(/\\/g, "/");
+
       // info(selected);
       const newProject = {
         id: projects.length + 1,
-        name: selected.split("/").pop() || "New Project",
-        path: selected,
+        name: newPath.split("/").pop() || "New Project",
+        path: newPath,
         last_opened: new Date().getTime(),
       };
       setProjects([...projects, newProject]);
